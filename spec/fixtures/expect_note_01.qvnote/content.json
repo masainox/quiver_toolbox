@@ -1,0 +1,17 @@
+{
+  "title": "My title",
+  "cells": [
+    {
+      "type": "text",
+      "data": "Cell 01 data."
+    },
+    {
+      "type": "markdown",
+      "data": "Cell 02 data."
+    },
+    {
+      "type": "text",
+      "data": "Cell 03 data."
+    }
+  ]
+}

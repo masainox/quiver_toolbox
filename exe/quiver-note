@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "quiver_toolbox"
+
+
+class QuiverToolbox::CLI::Note
+  desc "version", "Show version number"
+  def version
+    puts QuiverToolbox::VERSION
+  end
+end
+
+QuiverToolbox::CLI::Note.start(ARGV)
