@@ -1,9 +1,15 @@
 
-def valid_notebook_file_01; File.join(fixtures_path, 'valid_note_file_01_tutorial.qvnotebook') ; end
+def valid_notebook_file_01; File.join(fixtures_path, 'valid_notebook_file_01_tutorial.qvnotebook') ; end
 
 def valid_note_file_01
   File.join(valid_notebook_file_01, 'D2A1CC36-CC97-4701-A895-EFC98EF47026.qvnote')
 end
+
+
+def valid_note_file_02
+  File.join(valid_notebook_file_01, 'ED3C96D1-AF37-4E66-9E6B-BB2005850479.qvnote')
+end
+
 
 def valid_note_hash_01
   {

@@ -28,4 +28,18 @@ describe QuiverToolbox::Util do
   end
 
 
+  describe ".rename_to_uuid_file" do
+    context "valid" do
+      before do
+        @src_file = 'photos/test_01.jpg'
+        @name = QuiverToolbox::Util.rename_to_uuid_file(@src_file)
+      end
+
+      it { expect(File.basename(@name, File.extname(@name)).size).to eq 36 }
+      it { expect(File.dirname(@name)).to eq '.' }
+
+    end
+  end
+
+
 end

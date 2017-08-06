@@ -175,4 +175,67 @@ RSpec.describe QuiverToolbox::Note do
 
   end
 
+
+  describe '#resources_dir' do
+    describe 'when valid' do
+      context 'valid note file 02' do
+        before do
+          @target = QuiverToolbox::Note.open(valid_note_file_02)
+        end
+
+        it { expect(@target.class).to be QuiverToolbox::Note }
+        it { expect(@target.title).to eq '12 - Preferences' }
+        it { expect(@target.uuid).to eq 'ED3C96D1-AF37-4E66-9E6B-BB2005850479' }
+        it { expect(@target.resources_dir).to eq File.join(File.expand_path(valid_note_file_02), 'resources/') }
+
+      end
+    end
+  end
+
+
+  describe '#src_resources=' do
+    describe 'when valid' do
+      context 'valid note file 02' do
+        before do
+          @target = QuiverToolbox::Note.open(valid_note_file_02)
+          @file_01 = File.join(valid_note_file_02, 'resources/12EDC7A8-A468-49BD-A742-3856B829129B.png')
+          @file_02 = File.join(valid_note_file_02, 'resources/1A766DDD-68AE-4AC3-BC2D-2CE310B2A8F5.png')
+          @src_files = [@file_01, @file_02]
+          @target.src_resources = @src_files
+        end
+
+        it { expect(@target.resources.size).to eq 2 }
+        it { expect(@target.resources[0]['src']).to eq @file_01 }
+        it { expect(@target.resources[1]['src']).to eq @file_02 }
+
+      end
+    end
+  end
+
+
+  describe '#store_resources' do
+    describe 'when valid' do
+      context 'valid note file 02' do
+        before do
+          @target = QuiverToolbox::Note.open(valid_note_file_02)
+          @file_01 = File.join(valid_note_file_02, 'resources/12EDC7A8-A468-49BD-A742-3856B829129B.png')
+          @file_02 = File.join(valid_note_file_02, 'resources/1A766DDD-68AE-4AC3-BC2D-2CE310B2A8F5.png')
+          @src_files = [@file_01, @file_02]
+          @target.src_resources = @src_files
+          @target.store_resources
+        end
+
+        it { expect(@target.resources.size).to eq 2 }
+        it { expect(File.exist?(@target.resources[0]['dist'])).to be true }
+
+        after do
+          @target.resources.each do |hash|
+            FileUtils.rm_rf(hash['dist'])
+          end
+        end
+      end
+    end
+  end
+
+
 end

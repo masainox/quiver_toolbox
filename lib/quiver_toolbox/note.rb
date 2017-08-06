@@ -1,6 +1,7 @@
 
 class QuiverToolbox::Note
   EXTENSION = 'qvnote'
+  RESOURCES_DIR = 'resources/'
   META_JSON_FILE_NAME = 'meta.json'
   CONTENT_JSON_FILE_NAME = 'content.json'
 
@@ -29,6 +30,11 @@ class QuiverToolbox::Note
     meta_json_file = File.join(dir, 'meta.json')
     meta_json = JSON.load(File.open(meta_json_file).read)
 
+    notebook_path = nil
+    Pathname.new(dir).ascend do |v|
+      notebook_path =  v.expand_path.to_s if v.basename.to_s.match('.qvnotebook')
+    end
+
     QuiverToolbox::Note.new do |n|
       n.created_at = meta_json['created_at']
       n.tags = meta_json['tags']
@@ -36,12 +42,14 @@ class QuiverToolbox::Note
       n.updated_at = meta_json['updated_at']
       n.uuid = meta_json['uuid']
       n.cells = content_json['cells']
+      n.notebook_path = notebook_path
     end
   end
 
 
   JSON_KEYS.each {|key| attr_accessor key.to_sym }
   attr_accessor :file, :notebook_path
+  attr_reader :resources
   def initialize(attributes = nil)
     attributes.each do |k, v|
       send("#{k.to_s}=", v) if respond_to?("#{k.to_s}=")
@@ -62,6 +70,20 @@ class QuiverToolbox::Note
 
   def file_name_with_path
     File.join(notebook_path, file_name)
+  end
+
+
+  def resources_dir
+    File.join(file_name_with_path, RESOURCES_DIR)
+  end
+
+
+  def src_resources=(src_files)
+    @resources = []
+    src_files.each do |src_file|
+      dist_file = File.join(resources_dir, "#{QuiverToolbox::Util.rename_to_uuid_file(src_file)}")
+      @resources << {'src' => src_file, 'dist' => dist_file}
+    end
   end
 
 
@@ -107,6 +129,14 @@ class QuiverToolbox::Note
   def store
     store_meta_json
     store_content_json
+  end
+
+
+  def store_resources
+    FileUtils.mkdir_p(resources_dir)
+    @resources.each do |hash|
+      FileUtils.cp(hash['src'], hash['dist'])
+    end
   end
 
 
