@@ -35,7 +35,7 @@ describe QuiverToolbox::Util do
         @name = QuiverToolbox::Util.rename_to_uuid_file(@src_file)
       end
 
-      it { expect(File.basename(@name, File.extname(@name)).size).to eq 36 }
+      it { expect(File.basename(@name, File.extname(@name)).size).to eq 32 }
       it { expect(File.dirname(@name)).to eq '.' }
 
     end
