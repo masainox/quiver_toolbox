@@ -129,6 +129,8 @@ class QuiverToolbox::Note
   def store
     store_meta_json
     store_content_json
+    store_resources if @resources
+    self
   end
 
 
@@ -137,6 +139,7 @@ class QuiverToolbox::Note
     @resources.each do |hash|
       FileUtils.cp(hash['src'], hash['dist'])
     end
+    self
   end
 
 
